@@ -1,0 +1,22 @@
+# .gitignore
+# Ignore generated artifacts and large data
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+.dist/
+env/
+venv/
+.venv/
+.conda/
+.ipynb_checkpoints/
+# Model checkpoints and results (large binary data)
+checkpoints/
+results/
+# Data generated during runs
+data/sft_datasets/*
+# OS-specific files
+.DS_Store
+Thumbs.db
