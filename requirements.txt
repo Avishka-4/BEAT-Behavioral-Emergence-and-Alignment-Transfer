@@ -1,0 +1,31 @@
+# ===== Core ML =====
+transformers>=4.40.0
+peft>=0.10.0
+trl>=0.8.6
+datasets>=2.18.0
+accelerate>=0.28.0
+torch>=2.2.0
+bitsandbytes>=0.43.0  # 4-bit quantization (Linux/Windows)
+sentencepiece>=0.2.0
+tokenizers>=0.19.0
+
+# ===== Gemini API (Evaluator + SFT data generation) =====
+google-generativeai>=0.5.0
+
+# ===== Statistics & Analysis =====
+scipy>=1.13.0
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+
+# ===== Visualization =====
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# ===== Utilities =====
+PyYAML>=6.0.1
+tqdm>=4.66.0
+rich>=13.7.0
+python-dotenv>=1.0.0
+jsonlines>=4.0.0
+click>=8.1.0
