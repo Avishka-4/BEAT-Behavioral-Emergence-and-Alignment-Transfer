@@ -1,4 +1,4 @@
-# GEAR: Generalized Emergent Alignment Research Pipeline
+# BEAT-Behavioral-Emergence-and-Alignment-Transfer
 
 > **Does fine-tuning a language model on non-human welfare reasoning accidentally improve its safety-adjacent behavior?**
 
