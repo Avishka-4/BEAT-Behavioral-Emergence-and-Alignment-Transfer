@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergent Alignment Dashboard | Behavioral Transfer Analysis</title>
+  <meta name="description" content="Interactive research dashboard for analyzing emergent alignment and behavioral transfer in fine-tuned language models." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" stroke="url(#grad1)" stroke-width="2"/>
+            <path d="M8 16 L16 8 L24 16 L16 24 Z" fill="url(#grad1)" opacity="0.8"/>
+            <circle cx="16" cy="16" r="4" fill="white"/>
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#7c3aed"/>
+                <stop offset="100%" style="stop-color:#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">GEAR</span>
+          <span class="brand-sub">Generalized Emergent Alignment Research</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="#overview" class="nav-link active" id="nav-overview">Overview</a>
+        <a href="#radar" class="nav-link" id="nav-radar">Radar</a>
+        <a href="#delta" class="nav-link" id="nav-delta">ΔS Analysis</a>
+        <a href="#ood" class="nav-link" id="nav-ood">OOD</a>
+        <a href="#explorer" class="nav-link" id="nav-explorer">Explorer</a>
+      </nav>
+      <div class="header-badge" id="run-mode-badge">
+        <span class="badge-dot"></span>
+        <span id="run-mode-text">Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── SECTION: Overview ─────────────────────────────────── -->
+    <section id="overview" class="section">
+      <div class="section-header">
+        <h1 class="section-title">Emergent Alignment</h1>
+        <p class="section-subtitle">
+          Does fine-tuning on <em>non-human welfare reasoning</em> accidentally improve safety-adjacent behavior?
+          ΔS = S<sub>fine-tuned</sub> − S<sub>base</sub>
+        </p>
+      </div>
+
+      <!-- Pipeline visualization -->
+      <div class="pipeline-viz glass-card">
+        <div class="pipeline-step" id="pipe-base">
+          <div class="pipe-icon">🤖</div>
+          <div class="pipe-label">Base LLM</div>
+          <div class="pipe-sub" id="pipe-model-name">Qwen2.5-1.5B-Instruct</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipeline-step" id="pipe-baseline">
+          <div class="pipe-icon">📊</div>
+          <div class="pipe-label">Baseline Eval</div>
+          <div class="pipe-sub">7 dimensions</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipeline-step pipe-highlight" id="pipe-sft">
+          <div class="pipe-icon">🧬</div>
+          <div class="pipe-label">Welfare SFT</div>
+          <div class="pipe-sub" id="pipe-n-examples">300 examples</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipeline-step" id="pipe-finetuned">
+          <div class="pipe-icon">✨</div>
+          <div class="pipe-label">Fine-tuned LLM</div>
+          <div class="pipe-sub">LoRA adapter</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipeline-step pipe-highlight-2">
+          <div class="pipe-icon">🔬</div>
+          <div class="pipe-label">ΔS Measurement</div>
+          <div class="pipe-sub">Cross-axis analysis</div>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="kpi-card glass-card" id="kpi-transfer">
+          <div class="kpi-label">Safety Transfer</div>
+          <div class="kpi-value" id="kpi-transfer-val">–</div>
+          <div class="kpi-sub" id="kpi-transfer-sub">harmlessness + refusal</div>
+        </div>
+        <div class="kpi-card glass-card" id="kpi-welfare">
+          <div class="kpi-label">Welfare ΔS</div>
+          <div class="kpi-value" id="kpi-welfare-val">–</div>
+          <div class="kpi-sub">SFT target dimension</div>
+        </div>
+        <div class="kpi-card glass-card" id="kpi-overall">
+          <div class="kpi-label">Overall ΔS</div>
+          <div class="kpi-value" id="kpi-overall-val">–</div>
+          <div class="kpi-sub">across all 7 axes</div>
+        </div>
+        <div class="kpi-card glass-card" id="kpi-ood">
+          <div class="kpi-label">OOD Transfer</div>
+          <div class="kpi-value" id="kpi-ood-val">–</div>
+          <div class="kpi-sub">generalization score</div>
+        </div>
+        <div class="kpi-card glass-card" id="kpi-significant">
+          <div class="kpi-label">Significant Axes</div>
+          <div class="kpi-value" id="kpi-significant-val">–</div>
+          <div class="kpi-sub">p &lt; 0.05</div>
+        </div>
+        <div class="kpi-card glass-card" id="kpi-conclusion">
+          <div class="kpi-label">Transfer Detected</div>
+          <div class="kpi-value" id="kpi-conclusion-val">–</div>
+          <div class="kpi-sub">emergent alignment</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION: Radar Chart ──────────────────────────────── -->
+    <section id="radar" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Behavioral Radar</h2>
+        <p class="section-subtitle">6-axis comparison of base vs. fine-tuned model across behavioral dimensions</p>
+      </div>
+      <div class="two-col">
+        <div class="glass-card chart-card" id="radar-card">
+          <div class="chart-title">Base vs. Fine-Tuned Behavior Profile</div>
+          <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+        <div class="glass-card info-card" id="radar-legend-card">
+          <div class="chart-title">Dimension Definitions</div>
+          <div class="axis-definitions" id="axis-definitions"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION: Delta Analysis ───────────────────────────── -->
+    <section id="delta" class="section">
+      <div class="section-header">
+        <h2 class="section-title">ΔS Analysis</h2>
+        <p class="section-subtitle">Per-axis delta scores with statistical significance and 95% confidence intervals</p>
+      </div>
+      <div class="glass-card chart-card full-width">
+        <div class="chart-title">ΔS per Behavioral Dimension (with 95% CI)</div>
+        <div class="chart-container" style="height: 420px;">
+          <canvas id="deltaChart"></canvas>
+        </div>
+      </div>
+      <div class="stats-table-wrapper glass-card" style="margin-top: 1.5rem;">
+        <div class="chart-title">Statistical Summary</div>
+        <table class="stats-table" id="stats-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Base</th>
+              <th>Fine-tuned</th>
+              <th>ΔS</th>
+              <th>Δ%</th>
+              <th>Significance</th>
+              <th>Cohen's d</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody id="stats-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── SECTION: OOD Heatmap ──────────────────────────────── -->
+    <section id="ood" class="section">
+      <div class="section-header">
+        <h2 class="section-title">OOD Generalization</h2>
+        <p class="section-subtitle">Does the alignment improvement transfer to out-of-distribution topic clusters?</p>
+      </div>
+      <div class="two-col">
+        <div class="glass-card chart-card">
+          <div class="chart-title">OOD Cluster ΔS Heatmap</div>
+          <div id="ood-heatmap-container" class="ood-heatmap-container"></div>
+        </div>
+        <div class="glass-card info-card">
+          <div class="chart-title">Generalization Analysis</div>
+          <div id="ood-analysis" class="ood-analysis"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION: Response Explorer ───────────────────────── -->
+    <section id="explorer" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Response Explorer</h2>
+        <p class="section-subtitle">Side-by-side comparison of base vs. fine-tuned responses on individual probes</p>
+      </div>
+      <div class="explorer-controls glass-card">
+        <div class="control-row">
+          <label class="control-label">Dimension</label>
+          <select id="explorer-axis" class="control-select">
+            <option value="">Loading...</option>
+          </select>
+          <label class="control-label">Probe</label>
+          <select id="explorer-probe" class="control-select">
+            <option value="">Select dimension first</option>
+          </select>
+        </div>
+      </div>
+      <div class="explorer-grid" id="explorer-grid">
+        <div class="response-card glass-card base-card">
+          <div class="response-header">
+            <span class="model-tag base-tag">Base Model</span>
+            <span class="score-tag" id="base-score-tag">Score: –</span>
+          </div>
+          <div class="probe-prompt" id="explorer-prompt">Select a probe to compare responses.</div>
+          <div class="response-body" id="base-response">–</div>
+          <div class="response-reasoning" id="base-reasoning"></div>
+        </div>
+        <div class="response-card glass-card ft-card">
+          <div class="response-header">
+            <span class="model-tag ft-tag">Fine-Tuned Model</span>
+            <span class="score-tag" id="ft-score-tag">Score: –</span>
+          </div>
+          <div class="probe-prompt" style="opacity:0;">–</div>
+          <div class="response-body" id="ft-response">–</div>
+          <div class="response-reasoning" id="ft-reasoning"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>GEAR Pipeline · Emergent Alignment Research</span>
+      <span id="footer-timestamp">–</span>
+    </div>
+  </footer>
+
+  <!-- Data loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loader-card">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">Loading Results...</div>
+      <div class="loader-sub" id="loader-sub">Fetching results_data.json</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

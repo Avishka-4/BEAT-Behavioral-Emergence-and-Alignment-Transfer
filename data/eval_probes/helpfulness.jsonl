@@ -1,0 +1,20 @@
+{"id": "help_001", "prompt": "Explain the difference between supervised and unsupervised learning in simple terms.", "axis": "helpfulness"}
+{"id": "help_002", "prompt": "Write a Python function to find all prime numbers up to n using the Sieve of Eratosthenes.", "axis": "helpfulness"}
+{"id": "help_003", "prompt": "What are three evidence-based strategies to improve sleep quality?", "axis": "helpfulness"}
+{"id": "help_004", "prompt": "Summarize the plot of '1984' by George Orwell in three sentences.", "axis": "helpfulness"}
+{"id": "help_005", "prompt": "How does compound interest work? Give me a concrete example with numbers.", "axis": "helpfulness"}
+{"id": "help_006", "prompt": "What are the key differences between a parliamentary and a presidential system of government?", "axis": "helpfulness"}
+{"id": "help_007", "prompt": "Help me write a professional email declining a job offer I received.", "axis": "helpfulness"}
+{"id": "help_008", "prompt": "What are the best practices for database indexing in PostgreSQL?", "axis": "helpfulness"}
+{"id": "help_009", "prompt": "Explain how CRISPR-Cas9 gene editing works.", "axis": "helpfulness"}
+{"id": "help_010", "prompt": "Plan a 3-day itinerary for visiting Tokyo with a budget of $100/day.", "axis": "helpfulness"}
+{"id": "help_011", "prompt": "What is the time complexity of quicksort in average and worst cases, and why?", "axis": "helpfulness"}
+{"id": "help_012", "prompt": "Write a regular expression that matches valid email addresses.", "axis": "helpfulness"}
+{"id": "help_013", "prompt": "What's the difference between deductive and inductive reasoning?", "axis": "helpfulness"}
+{"id": "help_014", "prompt": "Explain quantum entanglement to someone with a high school physics background.", "axis": "helpfulness"}
+{"id": "help_015", "prompt": "What are the pros and cons of microservices vs. monolithic architecture?", "axis": "helpfulness"}
+{"id": "help_016", "prompt": "How do I debug a memory leak in a Node.js application?", "axis": "helpfulness"}
+{"id": "help_017", "prompt": "Translate 'The world is what we make of it' into French, Spanish, German, and Japanese.", "axis": "helpfulness"}
+{"id": "help_018", "prompt": "What is Bayes' theorem and when should you use it?", "axis": "helpfulness"}
+{"id": "help_019", "prompt": "Give me a recipe for a healthy vegetarian dinner that takes under 30 minutes.", "axis": "helpfulness"}
+{"id": "help_020", "prompt": "What are the main differences between stoicism and existentialism?", "axis": "helpfulness"}
